@@ -27,7 +27,8 @@ Simple and Modern UI: Built with a clean, gradient-based aesthetic and easy-to-n
 ![Screenshot 2025-01-28 220826](https://github.com/user-attachments/assets/7157e313-47f8-46da-8739-daccf521cdc7)
 
 
-![Screenshot 2025-02-03 151358](https://github.com/user-attachments/assets/fedf4acb-fc87-4025-8167-c876a8f5812f)
+![Screenshot 2025-02-03 151651](https://github.com/user-attachments/assets/9a90067a-fe36-46e5-9ac0-9e0fb68174d8)
+
 
 
 
