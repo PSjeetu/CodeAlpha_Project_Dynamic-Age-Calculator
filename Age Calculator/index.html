@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Age Calculator</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: linear-gradient(135deg, #0ea5e9, #1e293b);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      padding: 40px;
+      width: 50%;
+      height: 70%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: 48px;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #d1d5db;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    input[type="date"] {
+      width: 50%;
+      padding: 15px;
+      border-radius: 10px;
+      border: none;
+      font-size: 18px;
+      background: #3a4f6d;
+      color: #ffffff;
+      outline: none;
+      transition: transform 0.3s, box-shadow 0.3s ease;
+      scroll-behavior: smooth;
+    }
+
+    input[type="date"]:focus {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #38bdf8;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #1e293b;
+      background: #38bdf8;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background: #0ea5e9;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1e1e2f;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .popup img {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+    }
+
+    .popup h2 {
+      font-size: 30px;
+      color: #ffffff;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .age-note {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dynamic Age Calculator</h1>
+    <p>Select your date of birth from the calendar below.</p>
+    <div class="input-group">
+      <input type="date" id="dob" max="2025-01-01">
+    </div>
+    <button onclick="calculateAge()">Calculate Age</button>
+  </div>
+
+  <div class="popup" id="popup">
+    <img id="popupGif" src="" alt="Popup GIF">
+    <h2 id="popupMessage"></h2>
+    <button onclick="closePopup()">Close</button>
+  </div>
+
+  <!-- Age groups note in the corner -->
+  <div class="age-note">
+    Checkout what your Age Group says:
+    <ul>
+      <li>0 years (less than 12 months)</li>
+      <li>1-5 years</li>
+      <li>6-10 years</li>
+      <li>11-17 years</li>
+      <li>18-21 years</li>
+      <li>22-25 years</li>
+      <li>26-30 years</li>
+      <li>31-59 years</li>
+      <li>60-200 years</li>
+      <li>More than 200 years :)</li>
+    </ul>
+  </div>
+
+  <script>
+    function calculateAge() {
+      const dobInput = document.getElementById("dob").value;
+
+      if (!dobInput) {
+        alert("Please select your Date of Birth.");
+        return;
+      }
+
+      const dob = new Date(dobInput);
+      const today = new Date();
+
+      if (dob > today) {
+        alert("Invalid date. Birth date cannot be in the future.");
+        return;
+      }
+
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      const dayDiff = today.getDate() - dob.getDate();
+
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+
+      const months = monthDiff < 0 ? 12 + monthDiff : monthDiff;
+      const days = dayDiff < 0 ? new Date(dob.getFullYear(), dob.getMonth() + 1, 0).getDate() + dayDiff : dayDiff;
+
+      showPopup(age, months, days);
+    }
+
+    function showPopup(age, months, days) {
+      const popup = document.getElementById("popup");
+      const popupGif = document.getElementById("popupGif");
+      const popupMessage = document.getElementById("popupMessage");
+
+      if (age === 0 && months < 12) {
+        popupGif.src = "./assets/Age 0.jpeg";
+        popupMessage.innerText = `You are ${months} months and ${days} days old! 
+        Eat, Sleep & Repeat!`;
+      } else if (age >= 1 && age <= 5) {
+        popupGif.src = "./assets/Age 1-5.gif";
+        popupMessage.innerText = `You are ${age} years old! 
+        Cute crawler and bubbly!`;
+      } else if (age > 6 && age <= 10) {
+        popupGif.src = "./assets/Age 6-10.gif";
+        popupMessage.innerText = `You are ${age} years old! 
+        Play and have fun!`;
+      } else if (age > 11 && age <= 17) {
+        popupGif.src = "./assets/Age 11-17.gif";
+        popupMessage.innerText = `You are ${age} years old! 
+        Being mischievous!`;
+      } else if (age > 18 && age <= 21) {
+        popupGif.src = "./assets/Age 18-21.avif";
+        popupMessage.innerText = `You are ${age} years old! 
+        Don't know what to do!`;
+      } else if (age > 21 && age <= 25) {
+        popupGif.src = "./assets/Age 21-25.avif";
+        popupMessage.innerText = `You are ${age} years old! 
+        Waiting for the weekend, right?`;
+      } else if (age > 26 && age <= 30) {
+        popupGif.src = "./assets/Age 26-30.jpg";
+        popupMessage.innerText = `You are ${age} years old! 
+        Pillar of the family!`;
+      } else if (age > 31 && age <= 59) {
+        popupGif.src = "./assets/Age 31-59.gif";
+        popupMessage.innerText = `You are ${age} years old! 
+        Ssup?`;
+      } else if (age >= 60 && age <= 199) {
+        popupGif.src = "./assets/Age 60-199.gif";
+        popupMessage.innerText = `You are ${age} years old! 
+        Age brings wisdom!`;
+      } else if (age >= 200) {
+        popupGif.src = "./assets/Age 200 and above.png";
+        popupMessage.innerText = `Oh, Hello Death! 
+        Sorry, but I'll refrain from counting your age.`;
+      }
+
+      popup.style.display = "block";
+    }
+
+    function closePopup() {
+      const popup = document.getElementById("popup");
+      popup.style.display = "none";
+    }
+  </script>
+</body>
+</html>
